@@ -289,10 +289,10 @@ def init_db():
         db.session.commit()
         print('Usuário administrador criado.')
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # Certifique-se de que a pasta instance existe
-    with app.app_context():
-        os.makedirs(app.instance_path, exist_ok=True)
-    app.run(debug=True)   # debug=True apenas para desenvolvimento!
+    # with app.app_context():
+    #     os.makedirs(app.instance_path, exist_ok=True)
+    # app.run(debug=True)   # debug=True apenas para desenvolvimento!
     # app.run(host='0.0.0.0', port=5000) # Rodar localhost + Túnel Cloudfared
     # app.run(host='192.168.0.19', port=5000) # Rodar na mesma rede Wi-Fi
