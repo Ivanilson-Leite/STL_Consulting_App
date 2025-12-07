@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}STL Consulting - Área do Mentorado{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/x-icon">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="Área do Mentorado - STL Consulting" name="description" />
+  <meta content="" name="keywords" />
+  <meta content="" name="author" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/owl.carousel.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/owl.theme.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/owl.transitions.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/magnific-popup.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/jquery.countdown.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link id="colors" href="{{ url_for('static', filename='css/colors/scheme-01.css') }}" rel="stylesheet"
+    type="text/css" />
+  <link href="{{ url_for('static', filename='css/coloring.css') }}" rel="stylesheet" type="text/css" />
+
+  {% block head %}{% endblock %}
+
+  <style>
+    /* 1. Ajuste de Altura e Espaçamento Vertical na Barra Superior */
+    #topbar {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      min-height: 50px;
+    }
+
+    #mainmenu {
+      float: none !important;
+      text-align: right;
+      width: 100%;
+    }
+
+    .topbar-link {
+      display: inline-flex;
+      align-items: center;
+      color: white !important;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+
+    .topbar-link:hover {
+      opacity: 0.8;
+    }
+
+    .tb-item {
+      margin-left: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* 4. AJUSTES RESPONSIVOS (MOBILE) */
+    .user-greeting {
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .tb-item {
+        margin-left: 10px;
+      }
+
+      .user-greeting {
+        font-size: 12px;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .fa-lg {
+        font-size: 1.1em;
+      }
+
+      .hidden-mobile-label {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+
+    <div id="topbar" class="text-white bg-color topbar-noborder">
+      <div class="container">
+        <div class="d-flex justify-content-end align-items-center" style="height: 100%;">
+
+          {% if current_user.is_authenticated %}
+          {% set names = current_user.username.split() %}
+          {% set first_name = names[0] %}
+          {% set last_name = names[-1] if names|length > 1 else '' %}
+
+          <div class="tb-item">
+            <span class="fw-bold user-greeting me-1">
+              Olá, {{ first_name | title_except_prepositions }} {{ last_name | title_except_prepositions }}
+            </span>
+          </div>
+
+          <div class="tb-item" data-bs-toggle="tooltip" title="Mensagens">
+            <a href="#" class="topbar-link position-relative">
+              <i class="fa fa-bell fa-lg"></i>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1 border border-dark"
+                style="font-size: 0.5rem;">
+                0
+              </span>
+            </a>
+          </div>
+
+          <div class="tb-item" data-bs-toggle="tooltip" title="Meu Perfil">
+            <a href="#" class="topbar-link">
+              <i class="fa fa-circle-user fa-lg"></i>
+              <span class="ms-2 hidden-mobile-label">Perfil</span>
+            </a>
+          </div>
+
+          <div class="tb-item border-start border-white-50 ps-3 ms-2" data-bs-toggle="tooltip" title="Sair">
+            <a href="{{ url_for('auth.logout') }}" class="topbar-link">
+              <i class="fa fa-sign-out fa-lg"></i>
+              <span class="ms-2 hidden-mobile-label">Sair</span>
+            </a>
+          </div>
+
+          {% else %}
+          <div class="tb-item">
+            <a href="{{ url_for('auth.login') }}" class="topbar-link fw-bold user-greeting">
+              <i class="fa fa-user-lock me-2"></i>
+              <span>Área do Mentorado</span>
+            </a>
+          </div>
+
+          <div class="tb-item border-start border-white-50 ps-3 ms-3">
+            <a href="#" class="topbar-link">
+              <i class="fa fa-question-circle me-2"></i>
+              <span class="hidden-mobile-label">FAQ</span>
+            </a>
+          </div>
+          {% endif %}
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+    <header class="header-light transparent">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-12">
+            <div class="de-flex sm-pt10 justify-content-between">
+
+              <div class="de-flex-col">
+                <div id="logo">
+                  <a href="{{ url_for('main.index') }}">
+                    <img alt="" class="logo" src="{{ url_for('static', filename='images/logo-light.png') }}" />
+                    <img alt="" class="logo-2" src="{{ url_for('static', filename='images/logo.png') }}" />
+                  </a>
+                </div>
+              </div>
+
+              <div class="de-flex-col header-col-mid flex-grow-1 text-end">
+                <ul id="mainmenu" class="d-inline-block">
+                  {% if current_user.is_authenticated %}
+
+                  <li><a href="{{ url_for('main.index') }}">Home</a></li>
+
+                  {% if current_user.role == 'mentor' %}
+                  <li>
+                    <a href="{{ url_for('admin.dashboard') }}" style="color: #ffc107 !important;">
+                      <i class="fa fa-cogs me-1"></i> Área Mentor
+                    </a>
+                  </li>
+                  {% endif %}
+
+                  <li><a href="{{ url_for('mentor.mentor_area') }}">Mentorias</a></li>
+                  <li><a href="#">Agenda</a></li>
+                  <li><a href="#">Financeiro</a></li>
+                  <li><a href="#">Suporte</a></li>
+                  <li><a href="#">Currículo</a></li>
+
+                  {% else %}
+                  <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                  <li><a href="{{ url_for('main.about') }}">Sobre Nós</a></li>
+                  <li><a href="#">Eventos</a></li>
+                  <li><a href="#section-how">Trilha</a></li>
+                  <li><a href="#">Produtos</a></li>
+                  <li><a href="#">Contato</a></li>
+                  {% endif %}
+                </ul>
+              </div>
+
+              <div class="de-flex-col">
+                <div class="h-phone d-none d-lg-block ms-4">
+                  <span>Suporte</span><i class="fa fa-phone"></i> (81) 9 8752 1515
+                </div>
+                <span id="menu-btn"></span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="no-bottom no-top" id="content">
+      <div id="top"></div>
+      {% block content %}{% endblock %}
+    </div>
+    <a href="#" id="back-to-top"></a>
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="widget">
+              <a href="{{ url_for('main.index') }}"><img alt="" class="img-fluid mb20"
+                  src="{{ url_for('static', filename='images/logo-light.png') }}"></a>
+              <address class="s1">
+                <span><i class="id-color fa fa-map-marker fa-lg"></i>Recife, Pernambuco</span>
+                <span><i class="id-color fa fa-phone fa-lg"></i>(81) 9 8752 1515</span>
+                <span><i class="id-color fa fa-envelope-o fa-lg"></i><a
+                    href="mailto:stl_consulting@hotmail.com">stl_consulting@hotmail.com</a></span>
+                <span><i class="id-color fa fa-file-pdf-o fa-lg"></i><a
+                    href="{{ url_for('static', filename='arquivos/Portfólio STL Consulting.pdf') }}">Download
+                    Portfólio</a></span>
+              </address>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="widget">
+              <h5 class="id-color">Newsletter</h5>
+              <p>Receba novidades exclusivas em seu e-mail.</p>
+              <form id="newsletter_form" onsubmit="submitNewsletter(event)">
+                <div class="input-group">
+                  <input class="form-control" id="newsletter_email" name="email" placeholder="seu email" type="email"
+                    required />
+                  <button class="btn btn-custom" id="btn-submit-news" type="submit">
+                    <i class="fa fa-long-arrow-right"></i>
+                  </button>
+                </div>
+              </form>
+              <div class="spacer-10"></div>
+              <small class="text-white-op-5">Não enviamos spam.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subfooter">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="de-flex">
+                <div class="de-flex-col">
+                  &copy; 2025 - STL Consulting
+                </div>
+                <div class="de-flex-col">
+                  <div class="social-icons">
+                    <a href="#"><i class="fa fa-linkedin fa-lg"></i></a>
+                    <a href="#"><i class="fa fa-instagram fa-lg"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="modal fade" id="newsletterModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-body text-center p-5">
+            <div class="mb-4"><i class="fa fa-envelope-open-text fa-4x text-success"></i></div>
+            <h3 class="mb-3">Inscrição Confirmada!</h3>
+            <p class="text-muted">Você agora faz parte da nossa lista VIP.</p>
+            <button type="button" class="btn btn-custom mt-3" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="preloader">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="stlGlobalModal" tabindex="-1" aria-hidden="true" style="z-index: 10000;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg overflow-hidden">
+
+        <div id="stlModalHeader"
+          class="modal-header border-0 d-flex flex-column align-items-center justify-content-center pt-4 pb-0">
+          <div id="stlModalIcon" class="mb-3">
+          </div>
+          <h5 class="modal-title fw-bold text-center" id="stlModalTitle">Titulo</h5>
+        </div>
+
+        <div class="modal-body text-center text-muted px-4 pb-2">
+          <p id="stlModalMessage" class="mb-0">Sua mensagem aqui.</p>
+        </div>
+
+        <div class="modal-footer border-0 d-flex justify-content-center pb-4">
+          <button type="button" id="stlModalBtn" class="btn btn-sm px-4 rounded-pill"
+            data-bs-dismiss="modal">OK</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/wow.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.isotope.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/easing.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lenis.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/owl.carousel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.magnific-popup.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/enquire.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.stellar.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.plugin.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/typed.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.countTo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.countdown.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/designesia.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      // Mapeia categorias do Flask para os tipos do nosso JS
+      // Flask usa 'danger' para erro, nosso JS usa 'error'
+      var type = "{{ category }}";
+      if (type === 'danger') type = 'error';
+      if (type === 'message') type = 'info';
+
+      // Chama o alerta (adiciona um pequeno delay se houver múltiplos, ou mostra o último)
+      setTimeout(() => {
+        STLAlert.show(type, "{{ message | safe }}");
+      }, 500);
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    });
+  </script>
+
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    async function submitNewsletter(event) {
+      event.preventDefault();
+      const emailInput = document.getElementById('newsletter_email');
+      const btnSubmit = document.getElementById('btn-submit-news');
+      const originalBtnContent = btnSubmit.innerHTML;
+
+      btnSubmit.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+      btnSubmit.disabled = true;
+
+      try {
+        const response = await fetch('/api/newsletter/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput.value })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          var myModal = new bootstrap.Modal(document.getElementById('newsletterModal'));
+          myModal.show();
+          emailInput.value = '';
+        } else {
+          alert(data.message || "Erro ao se inscrever.");
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert("Ocorreu um erro ao tentar se inscrever.");
+      } finally {
+        btnSubmit.innerHTML = originalBtnContent;
+        btnSubmit.disabled = false;
+      }
+    }
+  </script>
+</body>
+
+</html>
