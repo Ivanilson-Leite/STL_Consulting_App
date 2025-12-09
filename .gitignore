@@ -1,0 +1,21 @@
+# Ambiente Virtual
+venv/
+.venv/
+env/
+
+# Arquivos de Sistema e IDE
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+
+# Variáveis de Ambiente (NUNCA suba senhas para o GitHub)
+.env
+
+# Banco de Dados Local (se usar SQLite)
+*.sqlite3
+*.db
+
+# Logs
+*.log
