@@ -8,5 +8,5 @@ from app import create_app
 app = create_app()
 
 if __name__ == "__main__":
-    # Esta parte é apenas para a execução em desenvolvimento (python wsgi.py)
-    app.run(host="0.0.0.0", port=8002)
+    # app.run(host="0.0.0.0", port=8002)
+    app.run(debug=True)   # debug=True apenas para desenvolvimento!

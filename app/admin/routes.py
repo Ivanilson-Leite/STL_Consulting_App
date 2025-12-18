@@ -108,6 +108,41 @@ def delete_task_definition(task_id):
     flash('Tarefa removida do módulo.', 'info')
     return redirect(url_for('admin.dashboard'))
 
+@admin.route('/task/edit/<int:task_id>', methods=['POST'])
+@login_required
+@mentor_required
+def edit_task_definition(task_id):
+    task = ModuleTask.query.get_or_404(task_id)
+
+    # Atualiza os campos básicos
+    task.module_name = request.form.get('module_name')
+    task.title = request.form.get('title')
+    task.description = request.form.get('description')
+    task.external_link = request.form.get('external_link')
+
+    # Atualiza ordem
+    task.order_index = request.form.get('order_index', 0, type=int)
+
+    # Lógica do Checkbox (se não vier no request, é False)
+    task.allow_upload = True if request.form.get('allow_upload') else False
+
+    # Lógica do Resource ID (pode ser vazio)
+    resource_id = request.form.get('resource_id')
+    if resource_id and resource_id != "":
+        task.resource_id = int(resource_id)
+    else:
+        task.resource_id = None
+
+    try:
+        db.session.commit()
+        flash('Tarefa atualizada com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Erro ao atualizar tarefa.', 'error')
+        print(f"Erro edit_task_definition: {e}")
+
+    return redirect(url_for('admin.dashboard'))
+
 # --- NOVO: Rota para Excluir Horário Livre ---
 @admin.route('/agenda/delete/<int:slot_id>')
 @login_required

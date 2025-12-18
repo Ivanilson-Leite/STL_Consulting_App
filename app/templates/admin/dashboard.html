@@ -571,14 +571,29 @@
               {% for t in module_tasks %}
               <tr>
                 <td><span class="badge bg-light text-dark border">{{ t.module_name }}</span></td>
-                <td>{{ t.title }}</td>
+                <td>
+                  <strong>{{ t.title }}</strong>
+                  {% if t.order_index > 0 %}
+                  <small class="text-muted ms-1">(Ordem: {{ t.order_index }})</small>
+                  {% endif %}
+                </td>
                 <td>
                   {% if t.resource_id %}<i class="fa fa-file text-primary" title="Tem Arquivo"></i>{% endif %}
                   {% if t.external_link %}<i class="fa fa-link text-info" title="Link Externo"></i>{% endif %}
                   {% if t.allow_upload %}<i class="fa fa-upload text-success" title="Exige Upload"></i>{% endif %}
                 </td>
-                <td><a href="{{ url_for('admin.delete_task_definition', task_id=t.id) }}" class="text-danger"
-                    onclick="return confirm('Tem certeza?')"><i class="fa fa-trash"></i></a></td>
+                <td>
+                  <button class="btn btn-link text-warning p-0 me-2" onclick="openEditTaskModal(this)"
+                    data-id="{{ t.id }}" data-module="{{ t.module_name }}" data-title="{{ t.title }}"
+                    data-desc="{{ t.description or '' }}" data-order="{{ t.order_index }}"
+                    data-resource="{{ t.resource_id or '' }}" data-link="{{ t.external_link or '' }}"
+                    data-upload="{{ 'true' if t.allow_upload else 'false' }}">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+
+                  <a href="{{ url_for('admin.delete_task_definition', task_id=t.id) }}" class="text-danger"
+                    onclick="return confirm('Tem certeza?')"><i class="fa fa-trash"></i></a>
+                </td>
               </tr>
               {% else %}
               <tr>
@@ -588,6 +603,75 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title fw-bold"><i class="fa fa-pencil-square-o me-2"></i>Editar Tarefa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="#manageTasksModal"
+          data-bs-toggle="modal"></button>
+      </div>
+      <div class="modal-body bg-light">
+        <form id="formEditTask" method="POST" class="p-2">
+
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="small text-muted fw-bold">Módulo</label>
+              <select name="module_name" id="editTaskModule" class="form-select form-select-sm" required>
+                <option value="Módulo 1">Módulo 1</option>
+                <option value="Módulo 2">Módulo 2</option>
+                <option value="Módulo 3">Módulo 3</option>
+                <option value="Módulo 4">Módulo 4</option>
+                <option value="Módulo 5">Módulo 5</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="small text-muted fw-bold">Ordem</label>
+              <input type="number" name="order_index" id="editTaskOrder" class="form-control form-control-sm" min="1"
+                required>
+            </div>
+            <div class="col-md-7">
+              <label class="small text-muted fw-bold">Título</label>
+              <input type="text" name="title" id="editTaskTitle" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-12">
+              <label class="small text-muted fw-bold">Descrição</label>
+              <input type="text" name="description" id="editTaskDesc" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-md-6">
+              <label class="small text-muted fw-bold">Modelo (Opcional)</label>
+              <select name="resource_id" id="editTaskResource" class="form-select form-select-sm">
+                <option value="">-- Nenhum --</option>
+                {% for res in resources %}
+                <option value="{{ res.id }}">{{ res.title }} ({{ res.filename|truncate(20) }})</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="small text-muted fw-bold">Link Externo</label>
+              <input type="url" name="external_link" id="editTaskLink" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-12 d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="allow_upload" id="editTaskUpload">
+                <label class="form-check-label small" for="editTaskUpload">Exige envio de arquivo?</label>
+              </div>
+              <div>
+                <button type="button" class="btn btn-sm btn-outline-secondary me-2" data-bs-target="#manageTasksModal"
+                  data-bs-toggle="modal">Cancelar</button>
+                <button type="submit" class="btn btn-sm btn-warning fw-bold px-4">Salvar Alterações</button>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -644,6 +728,44 @@
     } else {
       dynamicFields.style.display = 'none';
     }
+  }
+
+  // Função para abrir o Modal de Edição e preencher os dados
+  function openEditTaskModal(btn) {
+    // 1. Recupera dados do botão
+    const id = btn.getAttribute('data-id');
+    const module = btn.getAttribute('data-module');
+    const title = btn.getAttribute('data-title');
+    const desc = btn.getAttribute('data-desc');
+    const order = btn.getAttribute('data-order');
+    const resource = btn.getAttribute('data-resource');
+    const link = btn.getAttribute('data-link');
+    const upload = btn.getAttribute('data-upload') === 'true';
+
+    // 2. Preenche os inputs do Modal de Edição
+    document.getElementById('editTaskModule').value = module;
+    document.getElementById('editTaskTitle').value = title;
+    document.getElementById('editTaskDesc').value = desc;
+    document.getElementById('editTaskOrder').value = order;
+    document.getElementById('editTaskResource').value = resource; // Select selecionará automaticamente se o value existir
+    document.getElementById('editTaskLink').value = link;
+    document.getElementById('editTaskUpload').checked = upload;
+
+    // 3. Define a URL de ação do formulário dinamicamente
+    // Substitui o placeholder '0' pelo ID real
+    const form = document.getElementById('formEditTask');
+    // Atenção: A URL base deve corresponder à rota criada no routes.py
+    form.action = "/admin/task/edit/" + id;
+
+    // 4. Fecha o modal de lista e abre o de edição
+    var listModalEl = document.getElementById('manageTasksModal');
+    var listModal = bootstrap.Modal.getInstance(listModalEl);
+    if (listModal) {
+      listModal.hide();
+    }
+
+    var editModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+    editModal.show();
   }
 </script>
 
